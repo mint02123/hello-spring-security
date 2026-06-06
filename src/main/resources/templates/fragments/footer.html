@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<footer th:fragment="labFooter" class="text-center text-muted py-3 mt-5 border-top">
+    <small>
+        실습 수행 일시: <span id="lab-datetime"></span>
+        &nbsp;│&nbsp; 학번: 2191014
+        &nbsp;│&nbsp; 성명: 민재영
+    </small>
+    <script>
+        (function () {
+            const days = ['일','월','화','수','목','금','토'];
+            function render() {
+                const n = new Date();
+                const yoil = days[n.getDay()];
+                let h = n.getHours();
+                const ampm = h < 12 ? '오전' : '오후';
+                h = h % 12; if (h === 0) h = 12;
+                const pad = v => String(v).padStart(2, '0');
+                document.getElementById('lab-datetime').textContent =
+                    n.getFullYear() + '년 ' + pad(n.getMonth() + 1) + '월 ' + pad(n.getDate()) + '일 '
+                    + '(' + yoil + ') ' + ampm + ' ' + pad(h) + ':' + pad(n.getMinutes()) + ':' + pad(n.getSeconds());
+            }
+            render();
+            setInterval(render, 1000);
+        })();
+    </script>
+</footer>
+</body>
+</html>
