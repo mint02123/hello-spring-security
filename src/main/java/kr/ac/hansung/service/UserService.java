@@ -38,4 +38,16 @@ public class UserService {
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
+
+    @Transactional
+    public void changePassword(String email, String currentPassword, String newPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+        // 현재 비밀번호 검증: 평문 입력값 vs DB의 BCrypt 해시
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+        }
+        // 새 비밀번호 암호화 후 변경 → 더티 체킹으로 자동 UPDATE
+        user.setPassword(passwordEncoder.encode(newPassword));
+    }
 }
