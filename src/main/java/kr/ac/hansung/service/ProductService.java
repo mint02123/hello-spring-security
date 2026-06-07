@@ -54,4 +54,15 @@ public class ProductService {
     public Page<Product> searchProducts(String keyword, Pageable pageable) {
         return productRepository.findByNameContaining(keyword, pageable);
     }
+
+    @Transactional
+    public void update(Long id, ProductDto dto) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("상품을 찾을 수 없습니다: " + id));
+        // 더티 체킹: 영속 상태 엔티티의 필드를 바꾸면 커밋 시 자동 UPDATE
+        product.setName(dto.getName());
+        product.setPrice(dto.getPrice());
+        product.setDescription(dto.getDescription());
+        product.setStock(dto.getStock());
+    }
 }
